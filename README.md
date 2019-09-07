@@ -1,7 +1,7 @@
 # HubitatStuff
 Driver:
 Stat Holiday Switch
-* Specifically Canada/BC statuatory/bank holidays
+* Canada, specifically BC statuatory/bank holidays and weekends
 * Switch ON means it is not a work day
 * Switch OFF means it is a work day
-* Checks for status every day at 2am
+* Checks for status every day at 5 minutes after midnight (00:05 / 12:05am)
