@@ -1,7 +1,7 @@
 /**
  *  StatHoliday or Not
  *
- *  Copyright 2017 Ham
+ *  Copyright 2019 Ham
  *
  *  Licensed under the Apache License, Version 2.0 (the "License"); you may not use this file except
  *  in compliance with the License. You may obtain a copy of the License at:
@@ -33,10 +33,12 @@ def installed() {
     initialize()
 }
 
+def refresh() {
+    updated()
+}
+
 def updated() {
 	log.debug "Updated with settings: ${settings}"
-    unsubscribe()
-    unschedule()
     initialize()	    
 }
 
@@ -45,8 +47,17 @@ def initialize() {
 	//def rundate = d.format('dd/MM/yyyy HH:mm', tz)
     off()    
     state.typeOfDate = "Workday"
-    unsubscribe()
-    unschedule()
+    try {
+        unsubscribe()
+    } catch (unsubError) {
+        log.info(unsubError)
+    } 
+    
+    try {
+        unschedule()
+    } catch (unschError) {
+        log.info(unschError)
+    }
     schedule("0 5 0 1/1 * ? *", doDaily)
     doDaily()
 }
@@ -73,6 +84,7 @@ def doDaily() {
 def todayIsAHoliday() {
 	def thisDay = new Date().clearTime()    
     log.debug("Today is: " + thisDay)
+    state.typeOfDate = "Workday"
 	if (isWeekend(thisDay)) {
     	state.typeOfDate = "Weekend"
     	return true
